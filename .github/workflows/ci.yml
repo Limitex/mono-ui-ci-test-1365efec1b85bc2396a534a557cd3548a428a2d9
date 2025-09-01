@@ -33,7 +33,6 @@ jobs:
 
       - name: Download & Unzip VRChat SDK Dependencies
         run: |
-          ls
           # ワークフローの実行には jq と unzip が必要です
           sudo apt-get update && sudo apt-get install -y jq unzip
 
@@ -45,18 +44,18 @@ jobs:
             exit 1
           fi
 
-          # packages.jsonの存在を確認
-          if [ ! -f ./packages.json ]; then
-            echo "::error::File not found: ./packages.json. This file is required in the root of your repository."
+          # package.jsonの存在を確認
+          if [ ! -f ./package.json ]; then
+            echo "::error::File not found: ./package.json. This file is required in the root of your repository."
             exit 1
           fi
 
           # 依存関係のパッケージを展開するためのPackagesフォルダを作成
           mkdir -p Packages
-          echo "Reading ./packages.json to download and unzip dependencies..."
+          echo "Reading ./package.json to download and unzip dependencies..."
           
           # 2. vpmDependenciesを解析し、各パッケージをダウンロード・展開
-          jq -r '.vpmDependencies | to_entries[] | "\(.key) \(.value)"' ./packages.json | while read -r PKG_NAME VERSION_RANGE; do
+          jq -r '.vpmDependencies | to_entries[] | "\(.key) \(.value)"' ./package.json | while read -r PKG_NAME VERSION_RANGE; do
             # バージョン情報（例: ">=3.8.2"）からバージョン番号（例: "3.8.2"）を抽出
             VERSION=$(echo "$VERSION_RANGE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
             
