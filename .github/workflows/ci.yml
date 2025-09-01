@@ -98,16 +98,30 @@ jobs:
           done
 
           echo "All dependencies downloaded and placed in the Packages directory."
-          echo "Final directory structure:"
+
+      - name: Restructure for Package Mode
+        run: |
+          echo "Restructuring repository for GameCI packageMode..."
+          # テスト対象パッケージ用のサブディレクトリを作成
+          PACKAGE_DIR="package-under-test"
+          mkdir "$PACKAGE_DIR"
+          
+          # リポジトリのルートにあるファイルとディレクトリをサブディレクトリに移動
+          # `Packages`ディレクトリと新しく作成したディレクトリ自体は除外する
+          shopt -s extglob
+          mv !(Packages|$PACKAGE_DIR) "$PACKAGE_DIR/"
+          shopt -u extglob
+          
+          echo "Current directory structure:"
           ls -R
 
       - name: Cache Library
         uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-pkg-${{ hashFiles('package-under-test/**', 'Packages/**') }}
           restore-keys: |
-            Library-
+            Library-pkg-
 
       - name: Run tests
         uses: game-ci/unity-test-runner@v4
@@ -118,8 +132,10 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           packageMode: true
+          projectPath: package-under-test
           unityVersion: 2022.3.22f1
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: ${{ matrix.testMode }} Test Results
 
       - uses: actions/upload-artifact@v4
         if: always()
