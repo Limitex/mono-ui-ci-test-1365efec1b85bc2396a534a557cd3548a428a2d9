@@ -23,15 +23,15 @@ jobs:
         with:
           lfs: true
 
-      # For Support GameCI Issues
-      - name: Modifying Directory Structure
-        run: |
-          ls
-          mkdir -p dev.limitex.mono-ui
-          shopt -s extglob
-          mv !(dev.limitex.mono-ui) dev.limitex.mono-ui/
-          shopt -u extglob
-          ls
+      # # For Support GameCI Issues
+      # - name: Modifying Directory Structure
+      #   run: |
+      #     ls
+      #     mkdir -p dev.limitex.mono-ui
+      #     shopt -s extglob
+      #     mv !(dev.limitex.mono-ui) dev.limitex.mono-ui/
+      #     shopt -u extglob
+      #     ls
 
       - name: Cache Library
         uses: actions/cache@v3
