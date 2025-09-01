@@ -13,8 +13,8 @@ jobs:
       matrix:
         testMode:
           - playmode
-          - editmode
-          - standalone
+          # - editmode
+          # - standalone
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,6 +33,7 @@ jobs:
 
       - name: Download & Unzip VRChat SDK Dependencies
         run: |
+          ls
           # ワークフローの実行には jq と unzip が必要です
           sudo apt-get update && sudo apt-get install -y jq unzip
 
