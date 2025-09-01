@@ -1,0 +1,74 @@
+name: GameCI
+
+# on: [push, pull_request]
+on:
+  workflow_dispatch:
+    
+jobs:
+  test:
+    name: Test in ${{ matrix.testMode }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - dev.limitex.mono-ui
+        testMode:
+          - playmode
+          - editmode
+          - standalone
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # For Support GameCI Issues
+      - name: Modifying Directory Structure
+        run: |
+          mkdir -p dev.limitex.mono-ui
+          shopt -s extglob
+          mv !(dev.limitex.mono-ui) dev.limitex.mono-ui/
+          shopt -u extglob
+
+      - name: Cache Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v4
+        id: gameci
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          packageMode: true
+          unityVersion: 2022.3.22f1
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Test results
+          path: ${{ steps.gameci.outputs.artifactsPath }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Coverage results
+          path: ${{ steps.gameci.outputs.coveragePath }}
+
+      # - name: Build project
+      #   uses: game-ci/unity-builder@v4
+      #   env:
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #   with:
+      #     unityVersion: 2022.3.22f1
+      #     targetPlatform: StandaloneWindows
