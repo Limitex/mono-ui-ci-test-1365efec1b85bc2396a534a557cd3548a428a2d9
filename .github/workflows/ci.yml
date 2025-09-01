@@ -67,6 +67,7 @@ jobs:
             echo "--> Processing package: '$PKG_NAME' version '$VERSION'"
 
             # ダウンロードURLを公式リストから取得
+            cat official.json
             DOWNLOAD_URL=$(jq -r --arg pkg "$PKG_NAME" --arg ver "$VERSION" '.repo.packages[$pkg].versions[$ver].url' official.json)
 
             if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" == "null" ]; then
