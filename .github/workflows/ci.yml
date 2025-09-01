@@ -38,7 +38,7 @@ jobs:
 
           # 1. VRChatの公式パッケージリストをダウンロード
           echo "Downloading VRChat package list..."
-          curl -sL "https://packages.vrchat.com/official" -o official.json
+          curl -sL -H "User-Agent: ci/1.0" "https://packages.vrchat.com/official" -o official.json
           if [ ! -s official.json ]; then
             echo "::error::Failed to download official package list."
             exit 1
