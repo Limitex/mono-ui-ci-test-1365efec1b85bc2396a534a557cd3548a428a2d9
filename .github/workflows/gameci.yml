@@ -6,16 +6,15 @@ on:
 
 jobs:
   test:
-    # name: Test in ${{ matrix.testMode }}
-    name: Test in EditMode
+    name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     testMode:
-    #       - playmode
-    #       - editmode
-    #       - standalone
+    strategy:
+      fail-fast: false
+      matrix:
+        testMode:
+          # - playmode
+          - editmode
+          # - standalone
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,22 +55,19 @@ jobs:
         with:
           testMode: EditMode
           unityVersion: 2022.3.22f1
-          githubToken: ${{ github.token }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+dev.limitex.*
           customParameters: -assemblyNames dev.limitex.mono-ui.Tests dev.limitex.mono-ui.Editor.Tests
-          # checkName: ${{ matrix.testMode }} Test Results
-          checkName: EditMode Test Results
+          checkName: ${{ matrix.testMode }} Test Results
         
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          # name: Test results (${{ matrix.testMode }})
-          name: Test results (EditMode)
+          name: Test results (${{ matrix.testMode }})
           path: ${{ steps.gameci.outputs.artifactsPath }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          # name: Coverage results (${{ matrix.testMode }})
-          name: Coverage results (EditMode)
+          name: Coverage results (${{ matrix.testMode }})
           path: ${{ steps.gameci.outputs.coveragePath }}
