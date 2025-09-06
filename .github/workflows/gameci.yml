@@ -6,15 +6,16 @@ on:
 
 jobs:
   test:
-    name: Test in ${{ matrix.testMode }}
+    # name: Test in ${{ matrix.testMode }}
+    name: Test in EditMode
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        testMode:
-          # - playmode
-          - editmode
-          # - standalone
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     testMode:
+    #       - playmode
+    #       - editmode
+    #       - standalone
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,25 +47,29 @@ jobs:
           restore-keys: Library
             
       - name: Run tests
-        uses: game-ci/unity-test-runner@v4
+        uses: game-ci/unity-test-runner@v3
         id: gameci
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          testMode: ${{ matrix.testMode }}
+          testMode: EditMode
+          unityVersion: 2022.3.6f1
           githubToken: ${{ github.token }}
-          checkName: ${{ matrix.testMode }} Test Results
+          coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+dev.limitex.*
+          customParameters: -assemblyNames Tests
+          # checkName: ${{ matrix.testMode }} Test Results
+          checkName: EditMode Test Results
         
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Test results (${{ matrix.testMode }})
+          # name: Test results (${{ matrix.testMode }})
+          name: Test results (EditMode)
           path: ${{ steps.gameci.outputs.artifactsPath }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Coverage results (${{ matrix.testMode }})
+          # name: Coverage results (${{ matrix.testMode }})
+          name: Coverage results (EditMode)
           path: ${{ steps.gameci.outputs.coveragePath }}
