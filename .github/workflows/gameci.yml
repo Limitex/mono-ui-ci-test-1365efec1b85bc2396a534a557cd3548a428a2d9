@@ -37,9 +37,6 @@ jobs:
           repos: |
             https://vpm.limitex.dev/
       
-      - name: Install Project Dependencies
-        run: vrc-get install -y com.vrchat.worlds
-
       - uses: actions/cache@v4
         with:
           path: Library
