@@ -21,7 +21,8 @@ jobs:
         with:
           path: ci_checkout
           lfs: true
-      - name: Checkout test project
+
+      - name: Prepare project
         run: |
           mv ci_checkout/.github/unity/unity-2022.3.22f1/* . && \
           mkdir -p Packages/dev.limitex.mono-ui && \
@@ -37,7 +38,8 @@ jobs:
           repos: |
             https://vpm.limitex.dev/
       
-      - uses: actions/cache@v4
+      - name: Cache Library
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library
