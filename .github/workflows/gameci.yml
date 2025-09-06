@@ -30,14 +30,15 @@ jobs:
 
       - name: Setup vrc-get
         uses: anatawa12/sh-actions/setup-vrc-get@master
-      
-      - name: Install Project Dependencies
-        run: vrc-get install -y com.vrchat.worlds
-      
-      - uses: anatawa12/sh-actions/resolve-vpm-packages@master
+
+      - name: Resolve VPM packages
+        uses: anatawa12/sh-actions/resolve-vpm-packages@master
         with:
           repos: |
             https://vpm.limitex.dev/
+      
+      - name: Install Project Dependencies
+        run: vrc-get install -y com.vrchat.worlds
 
       - uses: actions/cache@v4
         with:
