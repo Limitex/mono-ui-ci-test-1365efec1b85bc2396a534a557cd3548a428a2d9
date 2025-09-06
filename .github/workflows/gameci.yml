@@ -12,8 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         testMode:
-          - playmode
-          # - editmode
+          # - playmode
+          - editmode
           # - standalone
     steps:
       - name: Checkout repository
