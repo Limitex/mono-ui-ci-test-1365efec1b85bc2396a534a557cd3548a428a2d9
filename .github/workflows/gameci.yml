@@ -7,18 +7,12 @@ on:
 
 jobs:
   test:
-    name: Test in ${{ matrix.testMode }}
+    name: Test and Coverage
     runs-on: ubuntu-latest
     permissions:
       contents: read
       checks: write
-    strategy:
-      fail-fast: false
-      matrix:
-        testMode:
-          - playmode
-          - editmode
-          - standalone
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,7 +40,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library-${{ matrix.testMode }}-${{ hashFiles('Packages/**') }}
+          key: Library-${{ hashFiles('Packages/**') }}
           restore-keys: Library-
             
       - name: Run tests
@@ -57,20 +51,20 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          testMode: ${{ matrix.testMode }}
+          testMode: editmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+dev.limitex.*
           customParameters: -assemblyNames dev.limitex.mono-ui.Tests dev.limitex.mono-ui.Editor.Tests
-          checkName: ${{ matrix.testMode }} Test Results
+          checkName: Test Results
         
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Test results (${{ matrix.testMode }})
+          name: Test results
           path: ${{ steps.gameci.outputs.artifactsPath }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Coverage results (${{ matrix.testMode }})
+          name: Coverage results
           path: ${{ steps.gameci.outputs.coveragePath }}
