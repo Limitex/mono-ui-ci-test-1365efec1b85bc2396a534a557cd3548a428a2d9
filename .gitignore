@@ -76,5 +76,3 @@ crashlytics-build.properties
 /[Aa]ssets/[Uu]donSharp.meta
 /[Aa]ssets/[Ss]erializedUdonPrograms/
 /[Aa]ssets/[Ss]erializedUdonPrograms.meta
-
-.env
