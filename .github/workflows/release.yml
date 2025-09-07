@@ -2,6 +2,7 @@ name: Release
 
 on:
   release:
+    types: [published]
 
 env:
   PACKAGE_NAME: mono-ui
@@ -62,7 +63,7 @@ jobs:
           name: release-assets
 
       - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             ${{ needs.build.outputs.archive_name }}
