@@ -58,7 +58,6 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           testMode: ${{ matrix.testMode }}
-          unityVersion: 2022.3.22f1
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+dev.limitex.*
           customParameters: -assemblyNames dev.limitex.mono-ui.Tests dev.limitex.mono-ui.Editor.Tests
