@@ -12,9 +12,9 @@ jobs:
       fail-fast: false
       matrix:
         testMode:
-          # - playmode
+          - playmode
           - editmode
-          # - standalone
+          - standalone
     permissions:
       contents: read
       checks: write
