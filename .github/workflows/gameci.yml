@@ -9,6 +9,9 @@ jobs:
   test:
     name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     strategy:
       fail-fast: false
       matrix:
@@ -16,9 +19,6 @@ jobs:
           - playmode
           - editmode
           - standalone
-    permissions:
-      contents: read
-      checks: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,8 +46,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: Library
-          key: Library
-          restore-keys: Library
+          key: Library-${{ matrix.testMode }}-${{ hashFiles('Packages/**') }}
+          restore-keys: Library-
             
       - name: Run tests
         uses: game-ci/unity-test-runner@v4
@@ -57,7 +57,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          testMode: EditMode
+          testMode: ${{ matrix.testMode }}
           unityVersion: 2022.3.22f1
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+dev.limitex.*
